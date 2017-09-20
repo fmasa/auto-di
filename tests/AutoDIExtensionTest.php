@@ -15,6 +15,13 @@ class AutoDIExtensionTest extends TestCase
         $container->getByType(Tests\Dir01\SimpleService::class);
     }
 
+    public function testLoadByClassNameWithDirectoryWildcard()
+    {
+        $container = $this->getContainer(__DIR__ . '/directoryWildcard.neon');
+        $container->getByType(Tests\Dir01\SimpleService::class);
+        $container->getByType(Tests\Dir02\SimpleService::class);
+    }
+
     /**
      * @param string $configFile
      * @param string $appDir

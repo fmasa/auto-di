@@ -1,0 +1,3 @@
+autoDI:
+    services:
+        - class: Fmasa\AutoDI\**\SimpleService
