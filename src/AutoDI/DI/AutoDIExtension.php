@@ -35,10 +35,11 @@ class AutoDIExtension extends CompilerExtension
 
         foreach($config['services'] as $service) {
             $matchingClasses = $classes->filter($service['class']);
+
             unset($service['class']);
 
             $services = array_map(function($class) use($service) {
-                $service['factory'] = $class;
+                $service['class'] = $class;
                 return $service;
             }, $matchingClasses);
 
