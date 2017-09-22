@@ -34,7 +34,6 @@ class AutoDIExtension extends CompilerExtension
         );
 
         foreach($config['services'] as $service) {
-
             $matchingClasses = $classes->filter($service['class']);
             unset($service['class']);
 

@@ -10,6 +10,14 @@ use PHPUnit\Framework\TestCase;
 class AutoDIExtensionTest extends TestCase
 {
 
+    public function testOverrideDirectories()
+    {
+        $container = $this->getContainer(__DIR__ . '/alternativeDirectories.neon');
+
+        $container->getByType(Tests\Dir01\AlternativeService::class);
+        $container->getByType(Tests\Dir02\AlternativeService::class);
+    }
+
     public function testLoadByClassName()
     {
         $container = $this->getContainer(__DIR__ . '/className.neon');
@@ -35,14 +43,14 @@ class AutoDIExtensionTest extends TestCase
      * @param string $appDir
      * @return Container
      */
-    private function getContainer($configFile, $appDir = __DIR__ . '/../app')
+    private function getContainer($configFile, $appDir = __DIR__ . '/../fixtures/app')
     {
         $configurator = new Configurator();
         $configurator->setTempDirectory(__DIR__ . '/../temp');
         $configurator->setDebugMode(true);
 
         $robotLoader = $configurator->createRobotLoader();
-        $robotLoader->addDirectory($appDir);
+        $robotLoader->addDirectory(__DIR__ . '/../fixtures');
         $robotLoader->register();
 
         $configurator->addConfig(__DIR__ . '/base.neon');

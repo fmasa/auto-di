@@ -1,0 +1,7 @@
+autoDI:
+    directories:
+        - %appDir%/../alternativeApp
+        - %appDir%/../alternativeApp2
+
+    services:
+        - class: ** # Register everything
