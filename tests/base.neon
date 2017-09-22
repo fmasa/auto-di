@@ -1,5 +1,0 @@
-extensions:
-    autoDI: Fmasa\AutoDI\AutoDIExtension
-
-di:
-    debugger: false

@@ -1,6 +1,6 @@
 <?php
 
-namespace Fmasa\AutoDI;
+namespace Fmasa\AutoDI\DI;
 
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;

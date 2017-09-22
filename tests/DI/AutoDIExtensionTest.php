@@ -1,9 +1,10 @@
 <?php
 
-namespace Fmasa\AutoDI;
+namespace Fmasa\AutoDI\DI;
 
 use Nette\Configurator;
 use Nette\DI\Container;
+use Fmasa\AutoDI\Tests;
 use PHPUnit\Framework\TestCase;
 
 class AutoDIExtensionTest extends TestCase
@@ -34,10 +35,10 @@ class AutoDIExtensionTest extends TestCase
      * @param string $appDir
      * @return Container
      */
-    private function getContainer($configFile, $appDir = __DIR__ . '/app')
+    private function getContainer($configFile, $appDir = __DIR__ . '/../app')
     {
         $configurator = new Configurator();
-        $configurator->setTempDirectory(__DIR__ . '/temp');
+        $configurator->setTempDirectory(__DIR__ . '/../temp');
         $configurator->setDebugMode(true);
 
         $robotLoader = $configurator->createRobotLoader();
@@ -45,6 +46,9 @@ class AutoDIExtensionTest extends TestCase
         $robotLoader->register();
 
         $configurator->addConfig(__DIR__ . '/base.neon');
+        $configurator->addParameters([
+            'appDir' => $appDir,
+        ]);
         $configurator->addConfig($configFile);
 
         return $configurator->createContainer();
