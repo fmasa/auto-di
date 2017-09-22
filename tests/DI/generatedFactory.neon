@@ -1,0 +1,3 @@
+autoDI:
+    services:
+        - implement: Fmasa\AutoDI\Tests\Dir01\*Factory

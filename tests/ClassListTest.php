@@ -66,18 +66,39 @@ class ClassListTest extends TestCase
         );
     }
 
-    public function testTraitsAreExcluded()
+    public function testFilterClasses()
     {
-        $filter = new ClassList(
-            array_merge(
-                self::CLASSES,
-                [ Tests\Dir01\SimpleTrait::class]
-            )
+        $list = new ClassList([
+            Tests\Dir01\SimpleService::class,
+            Tests\Dir01\SimpleTrait::class,
+            Tests\Dir01\SimpleInterface::class,
+        ]);
+
+        $classes = $list->getClasses();
+
+        $this->assertSame(
+            [
+                Tests\Dir01\SimpleService::class,
+            ],
+            $classes->toArray()
         );
-
-        $classes = $filter->getMatching('Fmasa\AutoDI\Tests\Dir**');
-
-        $this->assertSame(self::CLASSES, $classes->toArray());
     }
 
+    public function testFilterInterfaces()
+    {
+        $list = new ClassList([
+            Tests\Dir01\SimpleService::class,
+            Tests\Dir01\SimpleTrait::class,
+            Tests\Dir01\SimpleInterface::class,
+        ]);
+
+        $classes = $list->getInterfaces();
+
+        $this->assertSame(
+            [
+                Tests\Dir01\SimpleInterface::class,
+            ],
+            $classes->toArray()
+        );
+    }
 }

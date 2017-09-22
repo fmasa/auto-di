@@ -13,7 +13,7 @@ class ClassList
      */
     public function __construct(array $classes)
     {
-        $this->classes = $classes;
+        $this->classes = array_values($classes);
     }
 
     /**
@@ -23,7 +23,6 @@ class ClassList
     public function getMatching($classPattern)
     {
         $classes = preg_grep($this->buildRegex($classPattern), $this->classes);
-        $classes = array_filter($classes, function ($c) { return ! (new \ReflectionClass($c))->isTrait(); });
 
         return new ClassList($classes);
     }
@@ -50,11 +49,36 @@ class ClassList
     }
 
     /**
+     * @return ClassList
+     */
+    public function getClasses()
+    {
+        $classes = array_filter($this->classes, function ($c) {
+            $reflection = new \ReflectionClass($c);
+            return ! $reflection->isTrait() && ! $reflection->isInterface();
+        });
+
+        return new ClassList($classes);
+    }
+
+    /**
+     * @return ClassList
+     */
+    public function getInterfaces()
+    {
+        $interfaces = array_filter($this->classes, function ($c) {
+            return (new \ReflectionClass($c))->isInterface();
+        });
+
+        return new ClassList($interfaces);
+    }
+
+    /**
      * @return string[]
      */
     public function toArray()
     {
-        return array_values($this->classes);
+        return $this->classes;
     }
 
 }

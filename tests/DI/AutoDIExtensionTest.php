@@ -38,6 +38,15 @@ class AutoDIExtensionTest extends TestCase
         $this->assertCount(1, $container->findByTag('test'));
     }
 
+    public function testGeneratedFactory()
+    {
+        $container = $this->getContainer(__DIR__ . '/generatedFactory.neon');
+
+        /* @var $factory Tests\Dir01\ISimpleServiceFactory */
+        $factory = $container->getByType(Tests\Dir01\ISimpleServiceFactory::class);
+        $this->assertInstanceOf(Tests\Dir01\SimpleService::class, $factory->create());
+    }
+
     /**
      * @param string $configFile
      * @param string $appDir
@@ -48,6 +57,7 @@ class AutoDIExtensionTest extends TestCase
         $configurator = new Configurator();
         $configurator->setTempDirectory(__DIR__ . '/../temp');
         $configurator->setDebugMode(true);
+
 
         $robotLoader = $configurator->createRobotLoader();
         $robotLoader->addDirectory(__DIR__ . '/../fixtures');
