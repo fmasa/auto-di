@@ -16,7 +16,6 @@ class ClassFilter
         $this->classes = $classes;
     }
 
-
     /**
      * @param string $classPattern
      * @return string[]
