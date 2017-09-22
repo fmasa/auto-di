@@ -2,6 +2,7 @@
 
 namespace Fmasa\AutoDI;
 
+use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
 use Nette\Loaders\RobotLoader;
 
@@ -20,8 +21,6 @@ class AutoDIExtension extends CompilerExtension
 
         $builder = $this->getContainerBuilder();
 
-        $serviceId = 0;
-
         $robotLoader = new RobotLoader();
         foreach($config['directories'] as $directory) {
             $robotLoader->addDirectory($directory);
@@ -34,10 +33,17 @@ class AutoDIExtension extends CompilerExtension
         foreach($config['services'] as $service) {
             $matchingClasses = preg_grep($this->buildRegex($service['class']), $classes);
 
-            foreach($matchingClasses as $class) {
-                $builder->addDefinition($this->prefix($serviceId++))
-                    ->setFactory($class);
-            }
+            unset($service['class']);
+
+            $services = array_map(function($class) use($service) {
+                $service['factory'] = $class;
+                return $service;
+            }, $matchingClasses);
+
+            Compiler::loadDefinitions(
+                $builder,
+                $services
+            );
         }
     }
 

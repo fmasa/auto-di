@@ -22,6 +22,13 @@ class AutoDIExtensionTest extends TestCase
         $container->getByType(Tests\Dir02\SimpleService::class);
     }
 
+    public function testSetTags()
+    {
+        $container = $this->getContainer(__DIR__ . '/tags.neon');
+
+        $this->assertCount(1, $container->findByTag('test'));
+    }
+
     /**
      * @param string $configFile
      * @param string $appDir

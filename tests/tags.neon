@@ -1,0 +1,4 @@
+autoDI:
+    services:
+        - class: Fmasa\AutoDI\Tests\Dir01\SimpleService
+          tags: [ test ]
