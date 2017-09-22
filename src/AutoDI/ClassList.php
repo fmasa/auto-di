@@ -2,7 +2,7 @@
 
 namespace Fmasa\AutoDI;
 
-class ClassFilter
+class ClassList
 {
 
     /** @var string[] */
@@ -18,15 +18,14 @@ class ClassFilter
 
     /**
      * @param string $classPattern
-     * @return string[]
+     * @return ClassList
      */
-    public function filter($classPattern)
+    public function getMatching($classPattern)
     {
         $classes = preg_grep($this->buildRegex($classPattern), $this->classes);
-
         $classes = array_filter($classes, function ($c) { return ! (new \ReflectionClass($c))->isTrait(); });
 
-        return array_values($classes);
+        return new ClassList($classes);
     }
 
     /**
@@ -48,6 +47,14 @@ class ClassFilter
         );
 
         return "~^$regex$~";
+    }
+
+    /**
+     * @return string[]
+     */
+    public function toArray()
+    {
+        return array_values($this->classes);
     }
 
 }

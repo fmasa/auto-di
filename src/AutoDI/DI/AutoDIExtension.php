@@ -2,7 +2,7 @@
 
 namespace Fmasa\AutoDI\DI;
 
-use Fmasa\AutoDI\ClassFilter;
+use Fmasa\AutoDI\ClassList;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
 use Nette\Loaders\RobotLoader;
@@ -29,19 +29,19 @@ class AutoDIExtension extends CompilerExtension
 
         $robotLoader->rebuild();
 
-        $classes = new ClassFilter(
+        $classes = new ClassList(
             array_keys($robotLoader->getIndexedClasses())
         );
 
         foreach($config['services'] as $service) {
-            $matchingClasses = $classes->filter($service['class']);
+            $matchingClasses = $classes->getMatching($service['class']);
 
             unset($service['class']);
 
             $services = array_map(function($class) use($service) {
                 $service['class'] = $class;
                 return $service;
-            }, $matchingClasses);
+            }, $matchingClasses->toArray());
 
             Compiler::loadDefinitions(
                 $builder,

@@ -6,7 +6,7 @@ use Nette\Loaders\RobotLoader;
 use PHPUnit\Framework\TestCase;
 use Fmasa\AutoDI\Tests;
 
-class ClassFilterTest extends TestCase
+class ClassListTest extends TestCase
 {
 
     const CLASSES = [
@@ -26,53 +26,58 @@ class ClassFilterTest extends TestCase
 
     public function testClassFilterWithDirectoryWildcard()
     {
-        $filter = new ClassFilter(self::CLASSES);
+        $filter = new ClassList(self::CLASSES);
+
+        $classes = $filter->getMatching('Fmasa\AutoDI\**\SimpleService');
 
         $this->assertSame(
             [
                 Tests\Dir01\SimpleService::class,
                 Tests\Dir02\SimpleService::class,
             ],
-            $filter->filter('Fmasa\AutoDI\**\SimpleService')
+            $classes->toArray()
         );
     }
 
     public function testClassFilterWithDirectoryWildcardWithClassName()
     {
-        $filter = new ClassFilter(self::CLASSES);
+        $filter = new ClassList(self::CLASSES);
+
+        $classes = $filter->getMatching('Fmasa\AutoDI\Tests\Dir**');
 
         $this->assertSame(
             self::CLASSES,
-            $filter->filter('Fmasa\AutoDI\Tests\Dir**')
+            $classes->toArray()
         );
     }
 
     public function testOneLevelWildcardForClassName()
     {
-        $filter = new ClassFilter(self::CLASSES);
+        $filter = new ClassList(self::CLASSES);
+
+        $classes = $filter->getMatching('Fmasa\AutoDI\Tests\Dir01\*');
 
         $this->assertSame(
             [
                 Tests\Dir01\SimpleService::class,
                 Tests\Dir01\SimpleService2::class,
             ],
-            $filter->filter('Fmasa\AutoDI\Tests\Dir01\*')
+            $classes->toArray()
         );
     }
 
     public function testTraitsAreExcluded()
     {
-        $filter = new ClassFilter(
+        $filter = new ClassList(
             array_merge(
                 self::CLASSES,
                 [ Tests\Dir01\SimpleTrait::class]
             )
         );
 
-        $this->assertSame(
-            self::CLASSES,
-            $filter->filter('Fmasa\AutoDI\Tests\Dir**')
-        );
+        $classes = $filter->getMatching('Fmasa\AutoDI\Tests\Dir**');
+
+        $this->assertSame(self::CLASSES, $classes->toArray());
     }
 
 }
