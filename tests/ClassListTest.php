@@ -66,6 +66,17 @@ class ClassListTest extends TestCase
         );
     }
 
+    public function testGroupMatch()
+    {
+        $classes = new ClassList(
+            array_merge(self::CLASSES, [Tests\Dir03\ForeignService::class])
+        );
+
+        $matching = $classes->getMatching('Fmasa\AutoDI\Tests\{Dir01,Dir02}\**');
+
+        $this->assertSame(self::CLASSES, $matching->toArray());
+    }
+
     public function testFilterClasses()
     {
         $list = new ClassList([
@@ -101,4 +112,5 @@ class ClassListTest extends TestCase
             $classes->toArray()
         );
     }
+
 }

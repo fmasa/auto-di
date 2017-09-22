@@ -37,6 +37,8 @@ class ClassList
             '~\\*\\*~' => '(.*)', // ** for n-level wildcard
             '~(\\\\)~' => '\\\\\\\\', // \ as NS delimiter
             '~(?<!\.)\*~' => '\w+', // * for single NS level / class name wildcard
+            '~\{((\w+,?)+)\}~' => '($1)',
+            '~,~' => '|', // PHP 7-like group use
         ];
 
         $regex = preg_replace(
