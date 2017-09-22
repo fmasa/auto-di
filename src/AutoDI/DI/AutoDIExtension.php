@@ -16,11 +16,9 @@ class AutoDIExtension extends CompilerExtension
         ],
     ];
 
-    public function loadConfiguration()
+    public function beforeCompile()
     {
         $config = $this->getConfig($this->defaults);
-
-        $builder = $this->getContainerBuilder();
 
         $robotLoader = new RobotLoader();
         foreach($config['directories'] as $directory) {
@@ -33,14 +31,19 @@ class AutoDIExtension extends CompilerExtension
             array_keys($robotLoader->getIndexedClasses())
         );
 
+        $builder = $this->getContainerBuilder();
+
         foreach($config['services'] as $service) {
 
             list($field, $matchingClasses) = $this->getClasses($service, $classes);
+            $matchingClasses = array_filter($matchingClasses, function ($class) use ($builder) {
+                return count($builder->findByType($class)) === 0;
+            });
 
             $services = array_map(function ($class) use ($service, $field) {
                 $service[$field] = $class;
                 return $service;
-            }, $matchingClasses->toArray());
+            }, $matchingClasses);
 
             Compiler::loadDefinitions(
                 $builder,
@@ -76,7 +79,7 @@ class AutoDIExtension extends CompilerExtension
 
             return [
                 $field,
-                $filteredClasses->getMatching($service[$field]),
+                $filteredClasses->getMatching($service[$field])->toArray(),
             ];
         }
 

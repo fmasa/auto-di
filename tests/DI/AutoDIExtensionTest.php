@@ -47,6 +47,14 @@ class AutoDIExtensionTest extends TestCase
         $this->assertInstanceOf(Tests\Dir01\SimpleService::class, $factory->create());
     }
 
+    public function testAlreadyRegisteredClassOrInterfaceIsNotRegistered()
+    {
+        $container = $this->getContainer(__DIR__ . '/alreadyRegistered.neon');
+
+        $this->assertCount(1, $container->findByType(Tests\Dir01\ISimpleServiceFactory::class));
+        $this->assertCount(1, $container->findByType(Tests\Dir01\SimpleService2::class));
+    }
+
     /**
      * @param string $configFile
      * @param string $appDir

@@ -1,0 +1,9 @@
+services:
+    - Fmasa\AutoDI\Tests\Dir01\ISimpleServiceFactory
+    - Fmasa\AutoDI\Tests\Dir01\SimpleService2
+
+autoDI:
+
+    services:
+        - implement: Fmasa\AutoDI\Tests\Dir01\ISimpleServiceFactory
+        - class: Fmasa\AutoDI\Tests\Dir01\SimpleService2
