@@ -22,10 +22,9 @@ class ClassFilter
      */
     public function filter($classPattern)
     {
-        $classes = preg_grep(
-            $this->buildRegex($classPattern),
-            $this->classes
-        );
+        $classes = preg_grep($this->buildRegex($classPattern), $this->classes);
+
+        $classes = array_filter($classes, function ($c) { return ! (new \ReflectionClass($c))->isTrait(); });
 
         return array_values($classes);
     }
