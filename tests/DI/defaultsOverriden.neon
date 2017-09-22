@@ -1,0 +1,8 @@
+autoDI:
+
+    defaults:
+        tags: [ default]
+
+    services:
+        - class: Fmasa\AutoDI\Tests\Dir01\SimpleService
+          tags: [ new ]

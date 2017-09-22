@@ -55,6 +55,24 @@ class AutoDIExtensionTest extends TestCase
         $this->assertCount(1, $container->findByType(Tests\Dir01\SimpleService2::class));
     }
 
+    public function testDefaultsAreUsedIfNotOverriden()
+    {
+        $container = $this->getContainer(__DIR__ . '/defaults.neon');
+
+        $services = $container->findByTag('default');
+
+        $this->assertCount(1, $services);
+    }
+
+    public function testDefaultsAreOverriden()
+    {
+        $container = $this->getContainer(__DIR__ . '/defaultsOverriden.neon');
+        $services = $container->findByTag('new');
+
+        $this->assertEmpty($container->findByTag('default'));
+        $this->assertCount(1, $services);
+    }
+
     /**
      * @param string $configFile
      * @param string $appDir

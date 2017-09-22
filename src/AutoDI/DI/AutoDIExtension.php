@@ -14,6 +14,7 @@ class AutoDIExtension extends CompilerExtension
         'directories' => [
             '%appDir%',
         ],
+        'defaults' => [],
     ];
 
     public function beforeCompile()
@@ -39,6 +40,8 @@ class AutoDIExtension extends CompilerExtension
             $matchingClasses = array_filter($matchingClasses, function ($class) use ($builder) {
                 return count($builder->findByType($class)) === 0;
             });
+
+            $service += $config['defaults'];
 
             $services = array_map(function ($class) use ($service, $field) {
                 $service[$field] = $class;
