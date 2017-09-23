@@ -76,6 +76,14 @@ class ClassList
     }
 
     /**
+     * @return ClassList
+     */
+    public function getWithoutClasses(ClassList $list)
+    {
+        return new ClassList(array_diff($this->classes, $list->classes));
+    }
+
+    /**
      * @return string[]
      */
     public function toArray()

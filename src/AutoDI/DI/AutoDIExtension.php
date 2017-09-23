@@ -37,7 +37,14 @@ class AutoDIExtension extends CompilerExtension
         foreach($config['services'] as $service) {
 
             list($field, $matchingClasses) = $this->getClasses($service, $classes);
-            $matchingClasses = array_filter($matchingClasses, function ($class) use ($builder) {
+
+            if(isset($service['exclude'])) {
+                $excluded = $service['exclude'];
+                $matchingClasses = $this->removeExcludedClasses($matchingClasses, is_string($excluded) ? [$excluded] : $excluded);
+                unset($service['exclude']);
+            }
+
+            $matchingClasses = array_filter($matchingClasses->toArray(), function ($class) use ($builder) {
                 return count($builder->findByType($class)) === 0;
             });
 
@@ -58,7 +65,7 @@ class AutoDIExtension extends CompilerExtension
     /**
      * @param array $service
      * @param ClassList $classes
-     * @return array [definition field, matching classes]
+     * @return array [definition field, Class list]
      */
     private function getClasses(array $service, ClassList $classes)
     {
@@ -80,13 +87,26 @@ class AutoDIExtension extends CompilerExtension
                 continue;
             }
 
+            /* @var $filteredClasses ClassList */
+
             return [
                 $field,
-                $filteredClasses->getMatching($service[$field])->toArray(),
+                $filteredClasses->getMatching($service[$field]),
             ];
         }
 
         throw new \RuntimeException('This should never happen');
+    }
+
+    /**
+     * @param string[] $exludedPatterns
+     * @return ClassList
+     */
+    private function removeExcludedClasses(ClassList $classes, array $exludedPatterns)
+    {
+        return array_reduce($exludedPatterns, function(ClassList $c, $pattern) {
+            return $c->getWithoutClasses($c->getMatching($pattern));
+        }, $classes);
     }
 
 }

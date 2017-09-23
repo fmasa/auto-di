@@ -1,0 +1,4 @@
+autoDI:
+    services:
+        - class: Fmasa\AutoDI\Tests\**\*Service
+          exclude: 'Fmasa\AutoDI\Tests\{Dir01,Dir02}\SimpleService'

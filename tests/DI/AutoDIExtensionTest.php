@@ -73,6 +73,24 @@ class AutoDIExtensionTest extends TestCase
         $this->assertCount(1, $services);
     }
 
+    public function testExcludePattern()
+    {
+        $container = $this->getContainer(__DIR__ . '/excludePattern.neon');
+
+        $container->getByType(Tests\Dir03\ForeignService::class);
+        $this->assertNull($container->getByType(Tests\Dir01\SimpleService::class, false));
+        $this->assertNull($container->getByType(Tests\Dir02\SimpleService::class, false));
+    }
+
+    public function testExcludePatternList()
+    {
+        $container = $this->getContainer(__DIR__ . '/excludePatternList.neon');
+
+        $container->getByType(Tests\Dir03\ForeignService::class);
+        $this->assertNull($container->getByType(Tests\Dir01\SimpleService::class, false));
+        $this->assertNull($container->getByType(Tests\Dir02\SimpleService::class, false));
+    }
+
     /**
      * @param string $configFile
      * @param string $appDir
