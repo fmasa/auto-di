@@ -1,0 +1,36 @@
+
+language: php
+
+sudo: false
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
+
+matrix:
+  include:
+    - php: 5.6
+    - php: 7.0
+    - php: 7.1
+      env: COVERAGE="--coverage-clover build/logs/clover.xml"
+    - php: 7.2
+
+before_install:
+  - travis_retry composer self-update
+
+install:
+  - travis_retry composer update --no-interaction --prefer-dist
+
+script:
+  - vendor/bin/phpunit $COVERAGE
+
+after_script:
+  - if [ "$COVERAGE" != "" ]; then vendor/bin/coveralls --verbose || true; fi
+
+after_failure:
