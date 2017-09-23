@@ -57,7 +57,7 @@ class ClassList
     {
         $classes = array_filter($this->classes, function ($c) {
             $reflection = new \ReflectionClass($c);
-            return ! $reflection->isTrait() && ! $reflection->isInterface();
+            return ! $reflection->isTrait() && ! $reflection->isInterface() && ! $reflection->isAbstract();
         });
 
         return new ClassList($classes);

@@ -95,6 +95,23 @@ class ClassListTest extends TestCase
         );
     }
 
+    public function testGetClassesFiltersOutAbstractClasses()
+    {
+        $list = new ClassList([
+            Tests\Dir01\SimpleService::class,
+            Tests\Dir01\AbstractClass::class,
+        ]);
+
+        $classes = $list->getClasses();
+
+        $this->assertSame(
+            [
+                Tests\Dir01\SimpleService::class,
+            ],
+            $classes->toArray()
+        );
+    }
+
     public function testFilterInterfaces()
     {
         $list = new ClassList([
