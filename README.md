@@ -36,8 +36,8 @@ This registers every class under namespace `App\Model` which name ends with `Rep
 
 There are several simple operators that can be used in patterns:
 
-- `*` matches class name, one namespace level or part of it (without \)
-- `**` matches any part of namespace or classname (including \)
+- `*` matches class name, one namespace level or part of it (without \\)
+- `**` matches any part of namespace or classname (including \\)
 - `{Eshop,CMS}` options list, any item of list matches this pattern
 
 Apart from these, any PCRE regular expression can be used.
