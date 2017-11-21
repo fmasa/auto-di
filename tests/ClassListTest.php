@@ -2,7 +2,6 @@
 
 namespace Fmasa\AutoDI;
 
-use Nette\Loaders\RobotLoader;
 use PHPUnit\Framework\TestCase;
 use Fmasa\AutoDI\Tests;
 
@@ -15,14 +14,6 @@ class ClassListTest extends TestCase
         Tests\Dir01\SimpleService2::class,
         Tests\Dir01\SimpleService\AnotherService::class,
     ];
-
-    protected function setUp()
-    {
-        $loader = new RobotLoader();
-        $loader->addDirectory(__DIR__ . '/fixtures');
-        $loader->setTempDirectory(__DIR__ . '/temp');
-        $loader->register();
-    }
 
     public function testClassFilterWithDirectoryWildcard()
     {
