@@ -24,5 +24,10 @@
             "Fmasa\\": "src/"
         }
     },
+    "autoload-dev": {
+        "classmap": [
+            "tests/fixtures/"
+        ]
+    },
     "minimum-stability": "stable"
 }

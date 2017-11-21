@@ -15,6 +15,7 @@ class AutoDIExtension extends CompilerExtension
             '%appDir%',
         ],
         'defaults' => [],
+		'tempDir' => '%tempDir%',
     ];
 
     public function beforeCompile()
@@ -22,10 +23,12 @@ class AutoDIExtension extends CompilerExtension
         $config = $this->getConfig($this->defaults);
 
         $robotLoader = new RobotLoader();
+
         foreach($config['directories'] as $directory) {
             $robotLoader->addDirectory($directory);
         }
 
+        $robotLoader->setTempDirectory($config['tempDir']);
         $robotLoader->rebuild();
 
         $classes = new ClassList(
