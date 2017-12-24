@@ -118,10 +118,10 @@ autoDI:
         tags: [ my.auto.service ]
 
     services:
-        # theese services will have tag my.auto.service
+        # these services will have tag my.auto.service
         - class: App\Model\Repositories\**
         
-        # theese services will have only tag eventBus.subscriber 
+        # these services will have only tag eventBus.subscriber 
         - class: app\Model\Subscribers\**
           tags: [ eventBus.subscriber ]
 ```
