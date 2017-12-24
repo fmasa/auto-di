@@ -136,3 +136,14 @@ autoDI:
         - %appDir%
         - %appDir%/../vendor
 ```
+
+## Register services on configuration
+
+Compiler extensions such as AutoDIExtension manipulates the DI container
+in two phases (configuration loading and before compilation).
+By default this extension registers all services before compilation.
+This may not be optimal if you wan't to use this extension with other extensions
+such as decorator.
+
+You can enforce registration in configuration phase
+by setting `registerOnConfiguration` option to true.
