@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fmasa\AutoDI\DI;
 
 use Nette\Configurator;
