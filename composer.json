@@ -2,7 +2,7 @@
     "name": "fmasa/auto-di",
     "type": "library",
     "require": {
-	"php": "^5.6 || ^7.0",
+	"php": "^7.1",
         "nette/di": "^2.3",
         "nette/robot-loader": "^2.4.2 || ^3.0"
     },
