@@ -1,0 +1,11 @@
+autoDI:
+    registerOnConfiguration: true
+    services:
+        - class: Fmasa\AutoDI\Tests\Dir01\SimpleService
+
+decorator:
+    Fmasa\AutoDI\Tests\Dir01\SimpleService:
+        tags: [ decorated ]
+
+di:
+    debugger: false

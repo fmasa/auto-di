@@ -106,6 +106,13 @@ class AutoDIExtensionTest extends TestCase
         $this->assertCount(1, $container->findByType(Tests\Dir02\SimpleService::class));
     }
 
+    public function testWorksWithNetteDIDecorator()
+    {
+        $container = $this->getContainer(__DIR__ . '/decorator.neon');
+
+        $this->assertCount(1, $container->findByTag('decorated'));
+    }
+
     /**
      * @param string $configFile
      * @param string $appDir
