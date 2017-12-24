@@ -19,29 +19,26 @@ class AutoDIExtension extends CompilerExtension
 		'tempDir' => '%tempDir%',
     ];
 
-    public function beforeCompile()
+    public function beforeCompile(): void
     {
         if ( ! $this->shouldRegisterOnConfiguration()) {
             $this->registerServices();
         }
     }
 
-    public function loadConfiguration()
+    public function loadConfiguration(): void
     {
         if ($this->shouldRegisterOnConfiguration()) {
             $this->registerServices();
         }
     }
 
-    /**
-     * @return bool
-     */
-    private function shouldRegisterOnConfiguration()
+    private function shouldRegisterOnConfiguration(): bool
     {
         return (bool) $this->getConfig($this->defaults)['registerOnConfiguration'];
     }
 
-	private function registerServices()
+	private function registerServices(): void
 	{
         $config = $this->getConfig($this->defaults);
 
@@ -62,7 +59,7 @@ class AutoDIExtension extends CompilerExtension
 
         foreach ($config['services'] as $service) {
 
-            list($field, $matchingClasses) = $this->getClasses($service, $classes);
+            [$field, $matchingClasses] = $this->getClasses($service, $classes);
 
             if (isset($service['exclude'])) {
                 $excluded = $service['exclude'];
@@ -93,7 +90,7 @@ class AutoDIExtension extends CompilerExtension
      * @param ClassList $classes
      * @return array [definition field, Class list]
      */
-    private function getClasses(array $service, ClassList $classes)
+    private function getClasses(array $service, ClassList $classes): array
     {
         $types = [
             'class' => $classes->getClasses(),
@@ -126,9 +123,8 @@ class AutoDIExtension extends CompilerExtension
 
     /**
      * @param string[] $exludedPatterns
-     * @return ClassList
      */
-    private function removeExcludedClasses(ClassList $classes, array $exludedPatterns)
+    private function removeExcludedClasses(ClassList $classes, array $exludedPatterns): ClassList
     {
         return array_reduce($exludedPatterns, function(ClassList $c, $pattern) {
             return $c->getWithoutClasses($c->getMatching($pattern));
