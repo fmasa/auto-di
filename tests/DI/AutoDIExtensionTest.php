@@ -92,6 +92,21 @@ class AutoDIExtensionTest extends TestCase
     }
 
     /**
+     * There are 2 instances of AutoDIExtension registered, first with registration before compilation
+     * and second with registration on configuration. When registering same service by both,
+     * only second extension should register it
+     */
+    public function testRegisterOnConfiguration()
+    {
+        $container = $this->getContainer(__DIR__ . '/onConfiguration.neon');
+
+        $this->assertCount(1, $container->findByTag('onConfiguration'));
+
+        // service registered before compilation
+        $this->assertCount(1, $container->findByType(Tests\Dir02\SimpleService::class));
+    }
+
+    /**
      * @param string $configFile
      * @param string $appDir
      * @return Container

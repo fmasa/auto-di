@@ -11,6 +11,7 @@ class AutoDIExtension extends CompilerExtension
 {
 
     private $defaults = [
+    	'registerOnConfiguration' => FALSE,
         'directories' => [
             '%appDir%',
         ],
@@ -20,11 +21,33 @@ class AutoDIExtension extends CompilerExtension
 
     public function beforeCompile()
     {
+        if ( ! $this->shouldRegisterOnConfiguration()) {
+            $this->registerServices();
+        }
+    }
+
+    public function loadConfiguration()
+    {
+        if ($this->shouldRegisterOnConfiguration()) {
+            $this->registerServices();
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function shouldRegisterOnConfiguration()
+    {
+        return (bool) $this->getConfig($this->defaults)['registerOnConfiguration'];
+    }
+
+	private function registerServices()
+	{
         $config = $this->getConfig($this->defaults);
 
         $robotLoader = new RobotLoader();
 
-        foreach($config['directories'] as $directory) {
+        foreach ($config['directories'] as $directory) {
             $robotLoader->addDirectory($directory);
         }
 
@@ -37,11 +60,11 @@ class AutoDIExtension extends CompilerExtension
 
         $builder = $this->getContainerBuilder();
 
-        foreach($config['services'] as $service) {
+        foreach ($config['services'] as $service) {
 
             list($field, $matchingClasses) = $this->getClasses($service, $classes);
 
-            if(isset($service['exclude'])) {
+            if (isset($service['exclude'])) {
                 $excluded = $service['exclude'];
                 $matchingClasses = $this->removeExcludedClasses($matchingClasses, is_string($excluded) ? [$excluded] : $excluded);
                 unset($service['exclude']);
@@ -65,7 +88,7 @@ class AutoDIExtension extends CompilerExtension
         }
     }
 
-    /**
+	/**
      * @param array $service
      * @param ClassList $classes
      * @return array [definition field, Class list]

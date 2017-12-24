@@ -1,0 +1,18 @@
+autoDI:
+    services:
+        - class: Fmasa\AutoDI\Tests\Dir01\SimpleService
+          tags: [ onCompilation ]
+        - class: Fmasa\AutoDI\Tests\Dir02\SimpleService
+
+extensions:
+    autoDI: Fmasa\AutoDI\DI\AutoDIExtension
+    autoDI2: Fmasa\AutoDI\DI\AutoDIExtension
+
+autoDI2:
+    registerOnConfiguration: true
+    services:
+        - class: Fmasa\AutoDI\Tests\Dir01\SimpleService
+          tags: [ onConfiguration ]
+
+di:
+    debugger: false
