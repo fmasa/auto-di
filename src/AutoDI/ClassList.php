@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fmasa\AutoDI;
 
 class ClassList
@@ -16,11 +18,7 @@ class ClassList
         $this->classes = array_values($classes);
     }
 
-    /**
-     * @param string $classPattern
-     * @return ClassList
-     */
-    public function getMatching($classPattern)
+    public function getMatching(string $classPattern): ClassList
     {
         $classes = preg_grep($this->buildRegex($classPattern), $this->classes);
 
@@ -28,10 +26,9 @@ class ClassList
     }
 
     /**
-     * @param string $classPattern
      * @return string
      */
-    private function buildRegex($classPattern)
+    private function buildRegex(string $classPattern): string
     {
         $replacements = [
             '~\\*\\*~' => '(.*)', // ** for n-level wildcard
@@ -50,10 +47,7 @@ class ClassList
         return "~^$regex$~";
     }
 
-    /**
-     * @return ClassList
-     */
-    public function getClasses()
+    public function getClasses(): ClassList
     {
         $classes = array_filter($this->classes, function ($c) {
             $reflection = new \ReflectionClass($c);
@@ -63,10 +57,7 @@ class ClassList
         return new ClassList($classes);
     }
 
-    /**
-     * @return ClassList
-     */
-    public function getInterfaces()
+    public function getInterfaces(): ClassList
     {
         $interfaces = array_filter($this->classes, function ($c) {
             return (new \ReflectionClass($c))->isInterface();
@@ -75,10 +66,7 @@ class ClassList
         return new ClassList($interfaces);
     }
 
-    /**
-     * @return ClassList
-     */
-    public function getWithoutClasses(ClassList $list)
+    public function getWithoutClasses(ClassList $list): ClassList
     {
         return new ClassList(array_diff($this->classes, $list->classes));
     }
@@ -86,7 +74,7 @@ class ClassList
     /**
      * @return string[]
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->classes;
     }

@@ -15,7 +15,7 @@ class ClassListTest extends TestCase
         Tests\Dir01\SimpleService\AnotherService::class,
     ];
 
-    public function testClassFilterWithDirectoryWildcard()
+    public function testClassFilterWithDirectoryWildcard(): void
     {
         $filter = new ClassList(self::CLASSES);
 
@@ -30,7 +30,7 @@ class ClassListTest extends TestCase
         );
     }
 
-    public function testClassFilterWithDirectoryWildcardWithClassName()
+    public function testClassFilterWithDirectoryWildcardWithClassName(): void
     {
         $filter = new ClassList(self::CLASSES);
 
@@ -42,7 +42,7 @@ class ClassListTest extends TestCase
         );
     }
 
-    public function testOneLevelWildcardForClassName()
+    public function testOneLevelWildcardForClassName(): void
     {
         $filter = new ClassList(self::CLASSES);
 
@@ -57,7 +57,7 @@ class ClassListTest extends TestCase
         );
     }
 
-    public function testGroupMatch()
+    public function testGroupMatch(): void
     {
         $classes = new ClassList(
             array_merge(self::CLASSES, [Tests\Dir03\ForeignService::class])
@@ -68,7 +68,7 @@ class ClassListTest extends TestCase
         $this->assertSame(self::CLASSES, $matching->toArray());
     }
 
-    public function testFilterClasses()
+    public function testFilterClasses(): void
     {
         $list = new ClassList([
             Tests\Dir01\SimpleService::class,
@@ -86,7 +86,7 @@ class ClassListTest extends TestCase
         );
     }
 
-    public function testGetClassesFiltersOutAbstractClasses()
+    public function testGetClassesFiltersOutAbstractClasses(): void
     {
         $list = new ClassList([
             Tests\Dir01\SimpleService::class,
@@ -103,7 +103,7 @@ class ClassListTest extends TestCase
         );
     }
 
-    public function testFilterInterfaces()
+    public function testFilterInterfaces(): void
     {
         $list = new ClassList([
             Tests\Dir01\SimpleService::class,
