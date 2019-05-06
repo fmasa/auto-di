@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Fmasa\AutoDI\DI;
 
 use Fmasa\AutoDI\ClassList;
-use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
+use Nette\DI\Config\Helpers as ConfigHelpers;
+use Nette\DI\Definitions\FactoryDefinition;
+use Nette\DI\Helpers as DIHelpers;
+use Nette\DI\ServiceDefinition;
 use Nette\Loaders\RobotLoader;
 
 class AutoDIExtension extends CompilerExtension
@@ -42,8 +45,9 @@ class AutoDIExtension extends CompilerExtension
 
 	private function registerServices(): void
 	{
-        $config = $this->getConfig($this->defaults);
-
+		$builder = $this->getContainerBuilder();
+        $config = ConfigHelpers::merge($this->getConfig(), $this->defaults);
+		$config = DIHelpers::expand($config, $builder->parameters);
         $robotLoader = new RobotLoader();
 
         foreach ($config['directories'] as $directory) {
@@ -57,7 +61,6 @@ class AutoDIExtension extends CompilerExtension
             array_keys($robotLoader->getIndexedClasses())
         );
 
-        $builder = $this->getContainerBuilder();
 
         foreach ($config['services'] as $service) {
 
@@ -80,10 +83,26 @@ class AutoDIExtension extends CompilerExtension
                 return $service;
             }, $matchingClasses);
 
-            Compiler::loadDefinitions(
-                $builder,
-                $services
-            );
+            foreach ($services as $definitions) {
+
+				if(isset($definitions['implement'])) {
+					$definition = new FactoryDefinition();
+					$definition->setImplement($definitions['implement']);
+				} else if(isset($definitions['class'])) {
+					$definition = new ServiceDefinition();
+					$definition->setFactory($definitions['class']);
+				}
+				if(isset($definitions['tags'])){
+					$tags = [];
+					foreach($definitions['tags'] as $tag) {
+						$tags[$tag] = true;
+					}
+					$definition->setTags($tags);
+				}
+
+				$builder->addDefinition(null, $definition);
+			}
+
         }
     }
 
