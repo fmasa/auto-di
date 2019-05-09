@@ -40,7 +40,8 @@ class AutoDIExtension extends CompilerExtension
 
     private function shouldRegisterOnConfiguration(): bool
     {
-        return (bool) $this->getConfig($this->defaults)['registerOnConfiguration'];
+    	$config = $this->defaults + $this->getConfig();
+        return (bool) $config['registerOnConfiguration'];
     }
 
 	private function registerServices(): void
