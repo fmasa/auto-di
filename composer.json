@@ -10,7 +10,8 @@
         "phpunit/phpunit": "^5.7",
         "nette/bootstrap": "^2.4",
         "satooshi/php-coveralls": "^1.0",
-        "phpunit/phpcov": "^3.0"
+        "phpunit/phpcov": "^3.0",
+        "doctrine/coding-standard": "^6.0"
     },
     "license": "MIT",
     "authors": [

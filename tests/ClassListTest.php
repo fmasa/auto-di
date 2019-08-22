@@ -1,21 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fmasa\AutoDI;
 
 use PHPUnit\Framework\TestCase;
-use Fmasa\AutoDI\Tests;
+use function array_merge;
 
 class ClassListTest extends TestCase
 {
-
-    const CLASSES = [
+    private const CLASSES = [
         Tests\Dir01\SimpleService::class,
         Tests\Dir02\SimpleService::class,
         Tests\Dir01\SimpleService2::class,
         Tests\Dir01\SimpleService\AnotherService::class,
     ];
 
-    public function testClassFilterWithDirectoryWildcard(): void
+    public function testClassFilterWithDirectoryWildcard() : void
     {
         $filter = new ClassList(self::CLASSES);
 
@@ -30,7 +31,7 @@ class ClassListTest extends TestCase
         );
     }
 
-    public function testClassFilterWithDirectoryWildcardWithClassName(): void
+    public function testClassFilterWithDirectoryWildcardWithClassName() : void
     {
         $filter = new ClassList(self::CLASSES);
 
@@ -42,7 +43,7 @@ class ClassListTest extends TestCase
         );
     }
 
-    public function testOneLevelWildcardForClassName(): void
+    public function testOneLevelWildcardForClassName() : void
     {
         $filter = new ClassList(self::CLASSES);
 
@@ -57,7 +58,7 @@ class ClassListTest extends TestCase
         );
     }
 
-    public function testGroupMatch(): void
+    public function testGroupMatch() : void
     {
         $classes = new ClassList(
             array_merge(self::CLASSES, [Tests\Dir03\ForeignService::class])
@@ -68,7 +69,7 @@ class ClassListTest extends TestCase
         $this->assertSame(self::CLASSES, $matching->toArray());
     }
 
-    public function testFilterClasses(): void
+    public function testFilterClasses() : void
     {
         $list = new ClassList([
             Tests\Dir01\SimpleService::class,
@@ -86,7 +87,7 @@ class ClassListTest extends TestCase
         );
     }
 
-    public function testGetClassesFiltersOutAbstractClasses(): void
+    public function testGetClassesFiltersOutAbstractClasses() : void
     {
         $list = new ClassList([
             Tests\Dir01\SimpleService::class,
@@ -103,7 +104,7 @@ class ClassListTest extends TestCase
         );
     }
 
-    public function testFilterInterfaces(): void
+    public function testFilterInterfaces() : void
     {
         $list = new ClassList([
             Tests\Dir01\SimpleService::class,
@@ -120,5 +121,4 @@ class ClassListTest extends TestCase
             $classes->toArray()
         );
     }
-
 }

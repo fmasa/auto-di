@@ -12,15 +12,20 @@ php:
   - 7.2
   - 7.3
 
-matrix:
+jobs:
   include:
     - php: 7.1
       env:
         - COMPOSER_FLAGS="--prefer-lowest --prefer-stable"
-    - php: 7.1
-      env: COVERAGE="--coverage-clover build/logs/clover.xml"
-    - php: 7.2
+
     - php: 7.3
+      env:
+        - COVERAGE="--coverage-clover build/logs/clover.xml"
+
+    - stage: Coding standard
+      php: 7.3
+      install: travis_retry composer install --prefer-dist
+      script: vendor/bin/phpcs
 
 before_install:
   - travis_retry composer self-update

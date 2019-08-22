@@ -5,44 +5,55 @@ declare(strict_types=1);
 namespace Fmasa\AutoDI\DI;
 
 use Fmasa\AutoDI\ClassList;
+use InvalidArgumentException;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
 use Nette\Loaders\RobotLoader;
+use RuntimeException;
+use function array_filter;
+use function array_intersect_key;
+use function array_keys;
+use function array_map;
+use function array_reduce;
+use function count;
+use function implode;
+use function is_string;
 
 class AutoDIExtension extends CompilerExtension
 {
-
-    private $defaults = [
-    	'registerOnConfiguration' => FALSE,
-        'directories' => [
-            '%appDir%',
-        ],
+    private const DEFAULTS = [
+        'registerOnConfiguration' => false,
+        'directories' => ['%appDir%'],
         'defaults' => [],
-		'tempDir' => '%tempDir%',
+        'tempDir' => '%tempDir%',
     ];
 
-    public function beforeCompile(): void
-    {
-        if ( ! $this->shouldRegisterOnConfiguration()) {
-            $this->registerServices();
-        }
-    }
-
-    public function loadConfiguration(): void
+    public function beforeCompile() : void
     {
         if ($this->shouldRegisterOnConfiguration()) {
-            $this->registerServices();
+            return;
         }
+
+        $this->registerServices();
     }
 
-    private function shouldRegisterOnConfiguration(): bool
+    public function loadConfiguration() : void
     {
-        return (bool) $this->getConfig($this->defaults)['registerOnConfiguration'];
+        if (! $this->shouldRegisterOnConfiguration()) {
+            return;
+        }
+
+        $this->registerServices();
     }
 
-	private function registerServices(): void
-	{
-        $config = $this->getConfig($this->defaults);
+    private function shouldRegisterOnConfiguration() : bool
+    {
+        return (bool) $this->getConfig(self::DEFAULTS)['registerOnConfiguration'];
+    }
+
+    private function registerServices() : void
+    {
+        $config = $this->getConfig(self::DEFAULTS);
 
         $robotLoader = new RobotLoader();
 
@@ -60,23 +71,23 @@ class AutoDIExtension extends CompilerExtension
         $builder = $this->getContainerBuilder();
 
         foreach ($config['services'] as $service) {
-
             [$field, $matchingClasses] = $this->getClasses($service, $classes);
 
             if (isset($service['exclude'])) {
-                $excluded = $service['exclude'];
+                $excluded        = $service['exclude'];
                 $matchingClasses = $this->removeExcludedClasses($matchingClasses, is_string($excluded) ? [$excluded] : $excluded);
                 unset($service['exclude']);
             }
 
-            $matchingClasses = array_filter($matchingClasses->toArray(), function ($class) use ($builder) {
+            $matchingClasses = array_filter($matchingClasses->toArray(), static function ($class) use ($builder) {
                 return count($builder->findByType($class)) === 0;
             });
 
             $service += $config['defaults'];
 
-            $services = array_map(function ($class) use ($service, $field) {
+            $services = array_map(static function ($class) use ($service, $field) {
                 $service[$field] = $class;
+
                 return $service;
             }, $matchingClasses);
 
@@ -87,12 +98,12 @@ class AutoDIExtension extends CompilerExtension
         }
     }
 
-	/**
-     * @param array $service
-     * @param ClassList $classes
-     * @return array [definition field, Class list]
+    /**
+     * @param array<string, mixed> $service
+     *
+     * @return mixed[] [definition field, Class list]
      */
-    private function getClasses(array $service, ClassList $classes): array
+    private function getClasses(array $service, ClassList $classes) : array
     {
         $types = [
             'class' => $classes->getClasses(),
@@ -100,19 +111,19 @@ class AutoDIExtension extends CompilerExtension
         ];
 
         if (count(array_intersect_key($service, $types)) !== 1) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Exactly one of '
                 . implode(', ', array_keys($types))
                 . ' fields must be set'
             );
         }
 
-        foreach($types as $field => $filteredClasses) {
-            if(!isset($service[$field])) {
+        foreach ($types as $field => $filteredClasses) {
+            if (! isset($service[$field])) {
                 continue;
             }
 
-            /* @var $filteredClasses ClassList */
+            /** @var $filteredClasses ClassList */
 
             return [
                 $field,
@@ -120,17 +131,16 @@ class AutoDIExtension extends CompilerExtension
             ];
         }
 
-        throw new \RuntimeException('This should never happen');
+        throw new RuntimeException('This should never happen');
     }
 
     /**
      * @param string[] $exludedPatterns
      */
-    private function removeExcludedClasses(ClassList $classes, array $exludedPatterns): ClassList
+    private function removeExcludedClasses(ClassList $classes, array $exludedPatterns) : ClassList
     {
-        return array_reduce($exludedPatterns, function(ClassList $c, $pattern) {
+        return array_reduce($exludedPatterns, static function (ClassList $c, $pattern) {
             return $c->getWithoutClasses($c->getMatching($pattern));
         }, $classes);
     }
-
 }
