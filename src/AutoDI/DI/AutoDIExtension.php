@@ -97,11 +97,14 @@ class AutoDIExtension extends CompilerExtension
 					$definition->addTag('nette.inject');
 				}
 				if(isset($definitions['tags'])){
-					$tags = [];
 					foreach($definitions['tags'] as $tag) {
 						$definition->addTag($tag);
 					}
-
+				}
+				if(isset($definitions['setup'])){
+					foreach($definitions['setup'] as $setup) {
+						$definition->addSetup($setup);
+					}
 				}
 
 				$builder->addDefinition(null, $definition);
