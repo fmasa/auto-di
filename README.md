@@ -137,6 +137,17 @@ autoDI:
         - %appDir%/../vendor
 ```
 
+You can ignore directories, like this: 
+```yaml
+autoDI:
+    directories:
+        - %appDir%
+        - %appDir%/../vendor
+    ignoreDirectories: 
+        - exludedDir
+        - anotherExludedDir
+```
+
 ## Register services on configuration
 
 Compiler extensions such as AutoDIExtension manipulates the DI container

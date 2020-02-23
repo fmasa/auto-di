@@ -20,6 +20,7 @@ class AutoDIExtension extends CompilerExtension
 		'directories' => [
 			'%appDir%',
 		],
+		'ignoreDirectories' => [],
 		'defaults' => [],
 		'tempDir' => '%tempDir%',
 	];
@@ -53,6 +54,10 @@ class AutoDIExtension extends CompilerExtension
 
 		foreach ($config['directories'] as $directory) {
 			$robotLoader->addDirectory($directory);
+		}
+
+		foreach ($config['ignoreDirectories'] as $ignoredDirectory) {
+			$robotLoader->ignoreDirs = $robotLoader->ignoreDirs . ',' . $ignoredDirectory;
 		}
 
 		$robotLoader->setTempDirectory($config['tempDir']);
