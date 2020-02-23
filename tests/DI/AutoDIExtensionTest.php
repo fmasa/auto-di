@@ -40,6 +40,15 @@ class AutoDIExtensionTest extends TestCase
         $this->assertCount(1, $container->findByTag('test'));
     }
 
+    public function testSetup() : void
+    {
+        $container = $this->getContainer(__DIR__ . '/setup.neon');
+
+        $service = $container->getByType(Tests\Dir01\SimpleService::class);
+
+        $this->assertTrue($service->wasSetupMethodCalled());
+    }
+
     public function testGeneratedFactory(): void
     {
         $container = $this->getContainer(__DIR__ . '/generatedFactory.neon');
