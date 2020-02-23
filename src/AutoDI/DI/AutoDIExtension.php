@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Fmasa\AutoDI\DI;
 
 use Fmasa\AutoDI\ClassList;
+use Fmasa\AutoDI\Exceptions\IncompleteServiceDefinition;
 use Nette;
 use Nette\DI\CompilerExtension;
 use Nette\Loaders\RobotLoader;
@@ -96,11 +97,7 @@ class AutoDIExtension extends CompilerExtension
         ];
 
         if (count(array_intersect_key($service, $types)) !== 1) {
-            throw new \InvalidArgumentException(
-                'Exactly one of '
-                . implode(', ', array_keys($types))
-                . ' fields must be set'
-            );
+            throw IncompleteServiceDefinition::fromDefinition($service);
         }
 
         foreach($types as $field => $filteredClasses) {

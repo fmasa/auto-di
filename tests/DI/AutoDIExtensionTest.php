@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Fmasa\AutoDI\DI;
 
+use Fmasa\AutoDI\Exceptions\IncompleteServiceDefinition;
 use Nette\Configurator;
 use Nette\DI\Container;
 use Fmasa\AutoDI\Tests;
@@ -122,6 +123,13 @@ class AutoDIExtensionTest extends TestCase
         $container = $this->getContainer(__DIR__ . '/decorator.neon');
 
         $this->assertCount(1, $container->findByTag('decorated'));
+    }
+
+    public function testServiceWithoutImplementAndClassKeyThrowsException() : void
+    {
+        $this->expectException(IncompleteServiceDefinition::class);
+
+        $this->getContainer(__DIR__ . '/missingKey.neon');
     }
 
     private function getContainer(string $configFile, string $appDir = __DIR__ . '/../fixtures/app'): Container

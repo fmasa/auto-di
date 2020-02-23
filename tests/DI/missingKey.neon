@@ -1,0 +1,4 @@
+autoDI:
+    registerOnConfiguration: true
+    services:
+        - tags: [foo]
