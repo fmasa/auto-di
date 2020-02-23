@@ -6,6 +6,7 @@ namespace Fmasa\AutoDI\DI;
 
 use Fmasa\AutoDI\ClassList;
 use Fmasa\AutoDI\Exceptions\IncompleteServiceDefinition;
+use Fmasa\AutoDI\Exceptions\NoServiceRegistered;
 use Nette;
 use Nette\DI\CompilerExtension;
 use Nette\Loaders\RobotLoader;
@@ -17,6 +18,7 @@ class AutoDIExtension extends CompilerExtension
     {
         return Expect::structure([
             'services' => Expect::listOf(Expect::array()),
+            'errorOnNotMatchedDefinitions' => Expect::bool(true),
             'registerOnConfiguration' => Expect::bool(false),
             'directories' => Expect::listOf(Expect::string())->default([$this->getContainerBuilder()->parameters['appDir']]),
             'defaults' => Expect::array(),
@@ -81,6 +83,10 @@ class AutoDIExtension extends CompilerExtension
                 $service[$field] = $class;
                 return $service;
             }, $matchingClasses);
+
+            if ($config->errorOnNotMatchedDefinitions && count($services) === 0) {
+                throw NoServiceRegistered::byPattern($field);
+            }
 
             $this->compiler->loadDefinitionsFromConfig($services);
         }

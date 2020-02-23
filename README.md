@@ -156,3 +156,7 @@ such as decorator.
 
 You can enforce registration in configuration phase
 by setting `registerOnConfiguration` option to true.
+
+When no service is registered for configuration entry, either because no class/interface
+matches the pattern or all matched services were already registered in container, exception
+is thrown. This check can be disabled by setting `errorOnNotMatchedDefinitions` option to false.

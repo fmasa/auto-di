@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Fmasa\AutoDI\DI;
 
 use Fmasa\AutoDI\Exceptions\IncompleteServiceDefinition;
+use Fmasa\AutoDI\Exceptions\NoServiceRegistered;
 use Nette\Configurator;
 use Nette\DI\Container;
 use Fmasa\AutoDI\Tests;
@@ -130,6 +131,13 @@ class AutoDIExtensionTest extends TestCase
         $this->expectException(IncompleteServiceDefinition::class);
 
         $this->getContainer(__DIR__ . '/missingKey.neon');
+    }
+
+    public function testExceptionIsThrownIfThereAreNoServicesRegisteredForEntry() : void
+    {
+        $this->expectException(NoServiceRegistered::class);
+
+        $this->getContainer(__DIR__ . '/noRegisteredService.neon');
     }
 
     private function getContainer(string $configFile, string $appDir = __DIR__ . '/../fixtures/app'): Container

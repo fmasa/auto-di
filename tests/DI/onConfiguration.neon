@@ -3,6 +3,7 @@ autoDI:
         - class: Fmasa\AutoDI\Tests\Dir01\SimpleService
           tags: [ onCompilation ]
         - class: Fmasa\AutoDI\Tests\Dir02\SimpleService
+    errorOnNotMatchedDefinitions: false
 
 extensions:
     autoDI: Fmasa\AutoDI\DI\AutoDIExtension

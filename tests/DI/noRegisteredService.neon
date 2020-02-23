@@ -1,0 +1,6 @@
+services:
+    - Fmasa\AutoDI\Tests\Dir01\SimpleService2
+
+autoDI:
+    services:
+        - class: Fmasa\AutoDI\Tests\Dir01\SimpleService2

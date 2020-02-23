@@ -3,6 +3,7 @@ services:
     - Fmasa\AutoDI\Tests\Dir01\SimpleService2
 
 autoDI:
+    errorOnNotMatchedDefinitions: false
 
     services:
         - implement: Fmasa\AutoDI\Tests\Dir01\ISimpleServiceFactory
