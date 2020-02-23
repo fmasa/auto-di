@@ -5,21 +5,23 @@ declare(strict_types=1);
 namespace Fmasa\AutoDI\DI;
 
 use Fmasa\AutoDI\ClassList;
-use Nette\DI\Compiler;
+use Nette;
 use Nette\DI\CompilerExtension;
 use Nette\Loaders\RobotLoader;
+use Nette\Schema\Expect;
 
 class AutoDIExtension extends CompilerExtension
 {
-
-    private $defaults = [
-    	'registerOnConfiguration' => FALSE,
-        'directories' => [
-            '%appDir%',
-        ],
-        'defaults' => [],
-		'tempDir' => '%tempDir%',
-    ];
+    public function getConfigSchema() : Nette\Schema\Schema
+    {
+        return Expect::structure([
+            'services' => Expect::listOf(Expect::array()),
+            'registerOnConfiguration' => Expect::bool(false),
+            'directories' => Expect::listOf(Expect::string())->default([$this->getContainerBuilder()->parameters['appDir']]),
+            'defaults' => Expect::array(),
+            'tempDir' => Expect::string($this->getContainerBuilder()->parameters['tempDir']),
+        ]);
+    }
 
     public function beforeCompile(): void
     {
@@ -37,20 +39,20 @@ class AutoDIExtension extends CompilerExtension
 
     private function shouldRegisterOnConfiguration(): bool
     {
-        return (bool) $this->getConfig($this->defaults)['registerOnConfiguration'];
+        return (bool) $this->getConfig()->registerOnConfiguration;
     }
 
 	private function registerServices(): void
 	{
-        $config = $this->getConfig($this->defaults);
+        $config = $this->getConfig();
 
         $robotLoader = new RobotLoader();
 
-        foreach ($config['directories'] as $directory) {
+        foreach ($config->directories as $directory) {
             $robotLoader->addDirectory($directory);
         }
 
-        $robotLoader->setTempDirectory($config['tempDir']);
+        $robotLoader->setTempDirectory($config->tempDir);
         $robotLoader->rebuild();
 
         $classes = new ClassList(
@@ -59,8 +61,7 @@ class AutoDIExtension extends CompilerExtension
 
         $builder = $this->getContainerBuilder();
 
-        foreach ($config['services'] as $service) {
-
+        foreach ($config->services as $service) {
             [$field, $matchingClasses] = $this->getClasses($service, $classes);
 
             if (isset($service['exclude'])) {
@@ -73,23 +74,18 @@ class AutoDIExtension extends CompilerExtension
                 return count($builder->findByType($class)) === 0;
             });
 
-            $service += $config['defaults'];
+            $service += $config->defaults;
 
             $services = array_map(function ($class) use ($service, $field) {
                 $service[$field] = $class;
                 return $service;
             }, $matchingClasses);
 
-            Compiler::loadDefinitions(
-                $builder,
-                $services
-            );
+            $this->compiler->loadDefinitionsFromConfig($services);
         }
     }
 
 	/**
-     * @param array $service
-     * @param ClassList $classes
      * @return array [definition field, Class list]
      */
     private function getClasses(array $service, ClassList $classes): array
