@@ -1,6 +1,6 @@
 # Auto registration and configuration of services for Nette DI
 
-[![Build Status](https://travis-ci.org/fmasa/auto-di.svg?branch=master)](https://travis-ci.org/fmasa/auto-di)
+[![Build Status](https://travis-ci.org/fmasa/auto-di.svg?branch=2.x)](https://travis-ci.org/fmasa/auto-di)
 [![Coverage Status](https://coveralls.io/repos/github/fmasa/auto-di/badge.svg?branch=2.x)](https://coveralls.io/github/fmasa/auto-di?branch=2.x)
 
 `fmasa\autoDI` is package intended to make registration and configuration
