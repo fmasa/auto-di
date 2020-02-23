@@ -9,7 +9,7 @@ of services easier.
 ## Future of extension
 In Nette 3.0, [SearchExtension](https://doc.nette.org/en/3.0/di-builtin-extensions#toc-searchextension) was introduced.
 It builds on the same concept as this extension (in which I stole the concept from Symfony DependencyInjection).
-Unfortunately there are still a few problems that need to be fixed in order to fully replace `fmasa/auto-di` (https://github.com/nette/di/issues/215), but it's on the other hand part of Nette DI core and supports several features, that `fmasa/auto-di` doesn't (yet).
+Unfortunately there are still a few problems that need to be fixed in order to fully replace `fmasa/auto-di` ([nette/di#215](https://github.com/nette/di/issues/215), but it's on the other hand part of Nette DI core and supports several features, that `fmasa/auto-di` doesn't (yet).
 These are ways to register services implementing specific interface or extending specific class.
 
 So long-term goal is to deprecate this extension in favor of SearchExtension, when (and if) SearchExtension reaches feature parity.
